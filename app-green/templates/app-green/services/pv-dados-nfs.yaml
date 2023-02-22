@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.appGreen.fileserver }}
+  namespace: {{ .Values.appGreen.namespace }}
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /arquivos
+    server: {{ .Values.appGreen.filestore.ip }}

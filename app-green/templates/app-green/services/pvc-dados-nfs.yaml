@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.appGreen.fileserver }}
+  namespace: {{ .Values.appGreen.namespace }}
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: ""
+  volumeName: {{ .Values.appGreen.fileserver }}
+  resources:
+    requests:
+      storage: 10Gi

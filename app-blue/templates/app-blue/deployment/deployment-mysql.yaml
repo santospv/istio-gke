@@ -1,0 +1,122 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}{{ .Values.appBlue.name }}-mysql
+  namespace: {{ .Values.appBlue.namespace }}
+spec:
+  serviceName: {{ .Values.appBlue.bdService }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}{{ .Values.appBlue.name }}-mysql
+  template:
+    metadata:
+      labels: 
+        app: {{ .Release.Name }}{{ .Values.appBlue.name }}-mysql
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9104"
+        prometheus.io/path: "/metrics"
+    spec:
+      initContainers:
+        - name: fetch
+          image: santospv08/wget:1.0
+          imagePullPolicy: IfNotPresent
+          command:
+            [
+              "wget",
+              "--no-check-certificate",
+              "https://gitlab.com/santospv/app-cicd-pvs/-/raw/main/database/sql.sql?inline=false",
+              "-O",
+              "/docker-entrypoint-initdb.d/dump.sql",
+            ]
+          volumeMounts:
+            - mountPath: /docker-entrypoint-initdb.d
+              name: dump
+      containers:
+        - image: mysql:5.6
+          name: mysql
+          args:
+          - "--ignore-db-dir=lost+found"
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3306
+              protocol: TCP
+              name: mysql
+          env:
+            - name: MYSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: db-mysql-secret
+                  key: mysql-database
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-mysql-secret
+                  key: mysql-user
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-mysql-secret
+                  key: mysql-password
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-mysql-secret
+                  key: mysql-root-password
+          volumeMounts:
+            - name: dump
+              mountPath: /docker-entrypoint-initdb.d
+            - name: mysql-data
+              mountPath: "/var/lib/mysql"
+              subPath: "mysql"  
+        - name: mysql-exporter
+          image: prom/mysqld-exporter
+          ports:
+            - name: tpc
+              protocol: TCP
+              containerPort: 9104
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom: 
+                secretKeyRef: 
+                  key: mysql-root-password
+                  name: db-mysql-secret
+            - name: DATA_SOURCE_NAME
+              value: "root:$(MYSQL_ROOT_PASSWORD)@(mysql:3306)/"
+            - name: collect.global_status
+              value: 'true'
+            - name: collect.info_schema.innodb_metrics
+              value: 'true'
+            - name: collect.auto_increment.columns
+              value: 'true'
+            - name: collect.info_schema.processlist
+              value: 'true'
+            - name: collect.binlog_size
+              value: 'true'
+            - name: collect.info_schema.tablestats
+              value: 'true'
+            - name: collect.global_variables
+              value: 'true'
+            - name: collect.info_schema.query_response_time
+              value: 'true'
+            - name: collect.info_schema.userstats
+              value: 'true'
+            - name: collect.info_schema.tables
+              value: 'true'
+            - name: collect.perf_schema.tablelocks
+              value: 'true'
+            - name: collect.perf_schema.file_events
+              value: 'true'
+            - name: collect.perf_schema.eventswaits
+              value: 'true'
+            - name: collect.perf_schema.indexiowaits
+              value: 'true'
+            - name: collect.perf_schema.tableiowaits
+              value: 'true'     
+      volumes:
+        - name: dump
+          emptyDir: {}
+        - name: mysql-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.appBlue.pvClaim }}
+

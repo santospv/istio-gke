@@ -1,0 +1,78 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+  namespace: {{ .Values.appBlue.namespace }}
+  labels:
+    app: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9253"
+        prometheus.io/path: "/metrics"
+    spec:
+      containers:
+      - image: {{ .Values.appBlue.image }}
+        name: php
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 9000
+          protocol: TCP
+        
+        volumeMounts:
+        - name: {{ .Values.appBlue.fileserver }}
+          mountPath: /usr/local/apache2/htdocs/
+      - name: php-fpm-exporter
+        image: "quay.io/sysdig/php-fpm-exporter:v2.3.0"
+        ports:
+        - containerPort: 9253
+        env:
+        - name: PHP_FPM_WEB_LISTEN_ADDRESS
+          value: :9253
+        - name: PHP_FPM_WEB_TELEMETRY_PATH
+          value: /metrics
+        - name: PHP_FPM_SCRAPE_URI
+          value: tcp://127.0.0.1:9000/status
+        - name: PHP_FPM_FIX_PROCESS_COUNT
+          value: "false"
+        - name: PHP_FPM_LOG_LEVEL
+          value: info
+      volumes:
+      - name: {{ .Values.appBlue.fileserver }}
+        persistentVolumeClaim:
+          claimName: {{ .Values.appBlue.fileserver }}
+      - configMap:
+            defaultMode: 420
+            name: {{ .Values.appBlue.configMap.name }}
+        name: {{ .Values.appBlue.configMap.name }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+    labels:
+      app: php-fpm
+    name: {{ .Values.appBlue.configMap.name }}
+    namespace: {{ .Values.appBlue.namespace }}
+data:
+  www.conf: |
+    [www]
+    user=www-data
+    group=www-data
+    listen=127.0.0.1:9000
+    pm.status_path=/status
+    php_admin_value[display_errors] = Off
+    php_admin_flag[log_errors] = on
+    php_admin_value[error_log] = /var/log/fpm-php.www.log

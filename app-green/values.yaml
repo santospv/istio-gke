@@ -1,0 +1,30 @@
+appGreen:
+  name: green
+  image: santospv08/app-pvs-green:latest #{{taggreen}}
+  fileserver: fileserver-app-green
+  serviceType: NodePort
+  bdService: mysql-green
+  pvClaim: mysql-pv-claim-green
+  ingress:
+    service:
+      name: php-service-green
+  namespace: php
+  lb:
+    enabled: true
+  filestore:
+    ip: 10.189.173.130
+  service:
+    mysqlPort:
+      name: mysql-exporter-green
+  configMap:
+    name: php-fpm-config-green
+
+ingress:
+    name: ingress
+    enabled: true
+    ip: 34.174.50.28
+
+secret:
+    name: db-mysql-secret
+    enabled: true
+

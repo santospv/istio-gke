@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.appBlue.fileserver }}
+  namespace: {{ .Values.appBlue.namespace }}
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteMany
+  nfs:
+    path: /arquivos
+    server: {{ .Values.appBlue.filestore.ip }}

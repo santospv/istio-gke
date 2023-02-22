@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.appBlue.ingress.service.name }}
+  namespace: {{ .Values.appBlue.namespace }}
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http
+  selector:
+    app: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+
+  
