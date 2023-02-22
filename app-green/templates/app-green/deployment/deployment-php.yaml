@@ -65,7 +65,7 @@ metadata:
     labels:
       app: php-fpm
     name: {{ .Values.appGreen.configMap.name }}
-    namespace: {{ .Values.appBlue.namespace }}
+    namespace: {{ .Values.appGreen.namespace }}
 data:
   www.conf: |
     [www]
