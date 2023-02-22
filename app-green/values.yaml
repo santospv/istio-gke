@@ -20,9 +20,9 @@ appGreen:
     name: php-fpm-config-green
 
 ingress:
-    name: ingress
+    name: ingress-green
     enabled: true
-    ip: 34.174.60.1
+    ip: 34.174.250.28
 
 secret:
     name: db-mysql-secret

@@ -21,9 +21,9 @@ appBlue:
 
 
 ingress:
-    name: ingress
+    name: ingress-blue
     enabled: true
-    ip: 34.174.60.1
+    ip: 34.174.250.28
 
 secret:
     name: db-mysql-secret
