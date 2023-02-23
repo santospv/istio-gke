@@ -10,6 +10,6 @@ spec:
     protocol: TCP
     name: http
   selector:
-    app: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+    app: {{ .Values.appBlue.name }}-php
 
   

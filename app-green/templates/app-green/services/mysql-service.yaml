@@ -12,5 +12,5 @@ spec:
     protocol: TCP
     port: 9104
   selector:
-    app: {{ .Release.Name }}{{ .Values.appGreen.name }}-mysql
+    app: {{ .Values.appGreen.name }}-mysql
   clusterIP: None

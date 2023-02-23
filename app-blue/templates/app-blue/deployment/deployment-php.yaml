@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+  name: {{ .Values.appBlue.name }}-php
   namespace: {{ .Values.appBlue.namespace }}
   labels:
-    app: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+    app: {{ .Values.appBlue.name }}-php
 spec:
   replicas: 5
   strategy:
@@ -14,11 +14,11 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+      app: {{ .Values.appBlue.name }}-php
   template:
     metadata:
       labels:
-        app: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+        app: {{ .Values.appBlue.name }}-php
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9253"

@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ .Release.Name }}{{ .Values.appGreen.name }}-mysql
+  name: {{ .Values.appGreen.name }}-mysql
   namespace: {{ .Values.appGreen.namespace }}
 spec:
   serviceName: {{ .Values.appGreen.bdService }}
   selector:
     matchLabels:
-      app: {{ .Release.Name }}{{ .Values.appGreen.name }}-mysql
+      app: {{ .Values.appGreen.name }}-mysql
   template:
     metadata:
       labels: 
-        app: {{ .Release.Name }}{{ .Values.appGreen.name }}-mysql
+        app: {{ .Values.appGreen.name }}-mysql
       annotations:
         prometheus.io/scrape: "true"
         prometheus.io/port: "9104"

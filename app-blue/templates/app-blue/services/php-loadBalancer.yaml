@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Release.Name }}{{ .Values.appBlue.name }}-loadbalancer
+  name: {{ .Values.appBlue.name }}-loadbalancer
   namespace: {{ .Values.appBlue.namespace }}
 spec:
   selector:
-    app: {{ .Release.Name }}{{ .Values.appBlue.name }}-php
+    app: {{ .Values.appBlue.name }}-php
   ports:
   - port: 80
     targetPort: 80
