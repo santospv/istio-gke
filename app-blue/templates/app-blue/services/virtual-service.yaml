@@ -1,0 +1,16 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: myweb-blue-vs
+  namespace: php
+spec:
+  hosts:
+  - "34.174.60.1"
+  gateways:
+  - myweb-gateway
+  http:
+  - route:
+      - destination:
+          host: {{ .Values.appBlue.ingress.service.name }}
+          port:
+            number: 80

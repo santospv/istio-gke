@@ -10,7 +10,7 @@ appGreen:
       name: php-service-green
   namespace: php
   lb:
-    enabled: true
+    enabled: false
   filestore:
     ip: 10.189.173.130
   service:
@@ -22,7 +22,7 @@ appGreen:
 ingress:
     name: ingress-green
     enabled: true
-    ip: 34.174.60.1
+    ip: 34.174.128.151
 
 secret:
     name: db-mysql-secret

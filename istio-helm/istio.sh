@@ -19,6 +19,6 @@ kubectl create namespace istio-ingress
 
 kubectl label namespace istio-ingress istio-injection=enabled
 
-helm install istio-ingress istio/gateway -n istio-ingress --wait
+#helm install istio-ingress istio/gateway -n istio-ingress --wait
 
-
+helm install istio-ingressgateway istio/gateway -n istio-ingress

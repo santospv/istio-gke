@@ -1,6 +1,7 @@
 appBlue:
   name: blue
   image: santospv08/app-pvs-blue:latest #{{tagblue}}
+  imageGreen: santospv08/app-pvs-green:latest #{{tagblue}}
   serviceType: NodePort
   fileserver: fileserver-app-blue
   bdService: mysql-blue
@@ -10,7 +11,7 @@ appBlue:
       name: php-service-blue
   namespace: php
   lb:
-    enabled: true
+    enabled: false
   filestore:
     ip: 10.189.173.130
   service:
@@ -23,7 +24,7 @@ appBlue:
 ingress:
     name: ingress-blue
     enabled: true
-    ip: 34.174.60.1
+    ip:  34.174.128.151
 
 secret:
     name: db-mysql-secret
