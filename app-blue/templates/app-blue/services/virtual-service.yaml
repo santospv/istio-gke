@@ -1,16 +1,23 @@
-apiVersion: networking.istio.io/v1alpha3
+apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: myweb-blue-vs
   namespace: php
+  labels:
+    kiali_wizard: request_routing
 spec:
-  hosts:
-  - "34.174.176.175"
-  gateways:
-  - myweb-gateway
   http:
-  - route:
-      - destination:
-          host: {{ .Values.appBlue.ingress.service.name }}
-          port:
-            number: 80
+    - route:
+        - destination:
+            host: {{ .Values.appBlue.ingress.service.name }}
+            subset: v1
+          weight: 100
+        - destination:
+            host: {{ .Values.appBlue.ingress.service.name }}
+            subset: v2
+          weight: 0
+  hosts:
+    - '*'
+  gateways:
+    - php/php-service-blue-gateway
+

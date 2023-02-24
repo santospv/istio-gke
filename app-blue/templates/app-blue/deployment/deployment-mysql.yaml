@@ -15,9 +15,9 @@ spec:
         app: {{ .Values.appBlue.name }}-mysql
         version: v1
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9104"
-        prometheus.io/path: "/metrics"
+         prometheus.io/scrape: "true"
+         prometheus.io/port: "9104"
+         prometheus.io/path: "/metrics"
     spec:
       initContainers:
         - name: fetch

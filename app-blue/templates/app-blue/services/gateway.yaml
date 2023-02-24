@@ -1,7 +1,7 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: myweb-gateway
+  name: php-service-blue-gateway
   namespace: php
 spec:
   selector:
@@ -12,4 +12,4 @@ spec:
       name: http
       protocol: HTTP
     hosts:
-    - "34.174.176.175"
+    - "*"

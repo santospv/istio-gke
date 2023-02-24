@@ -1,1 +1,1 @@
-Deploy de aplicações Blue e Green com Helm e monitoramento utilizando a ferramenta Istio.
+Deploy de aplicações com Helm e monitoramento utilizando a ferramenta Istio.

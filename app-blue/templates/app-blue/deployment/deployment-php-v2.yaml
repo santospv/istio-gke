@@ -5,9 +5,9 @@ metadata:
   namespace: {{ .Values.appBlue.namespace }}
   labels:
     app: {{ .Values.appBlue.name }}-php
-    version: v1
+    version: v2
 spec:
-  replicas: 5
+  replicas: 1
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -16,16 +16,16 @@ spec:
   selector:
     matchLabels:
       app: {{ .Values.appBlue.name }}-php
-      version: v1
+      version: v2
   template:
     metadata:
       labels:
         app: {{ .Values.appBlue.name }}-php
-        version: v1
+        version: v2
       annotations:
-        prometheus.io/scrape: "true"
-        prometheus.io/port: "9253"
-        prometheus.io/path: "/metrics"
+         prometheus.io/scrape: "true"
+         prometheus.io/port: "9253"
+         prometheus.io/path: "/metrics"
     spec:
       containers:
       - image: {{ .Values.appBlue.imageGreen }}
